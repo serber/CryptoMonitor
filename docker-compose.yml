@@ -22,7 +22,7 @@ services:
             context: .
             dockerfile: ./Dockerfile
         environment:
-            - ConnectionStrings__MongoDb=mongodb://admin:admin@mongodb/cryptomonitor
+            - ConnectionStrings__MongoDb=mongodb://admin:admin@mongodb/admin/?readPreference=primary&ssl=false
             - SchedulerOptions__Jobs__0__Cron=0 0/1 * 1/1 * ? *
         restart: always
         ports:
