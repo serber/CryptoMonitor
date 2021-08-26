@@ -5,6 +5,7 @@ volumes:
 
 services:
     mongodb:
+        container_name: mongodb
         image: mongo:latest
         volumes:
             - ./db/mongo/init_database.js:/docker-entrypoint-initdb.d/init_database.js
@@ -18,6 +19,7 @@ services:
             - 27017:27017
             
     app:
+        container_name: cryptomonitor_web
         build:
             context: .
             dockerfile: ./Dockerfile
