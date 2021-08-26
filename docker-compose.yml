@@ -15,8 +15,6 @@ services:
             - MONGO_INITDB_ROOT_PASSWORD=admin
             - MONGO_INITDB_DATABASE=cryptomonitor
         restart: always
-        ports:
-            - 27017:27017
             
     app:
         container_name: cryptomonitor_web
@@ -25,7 +23,7 @@ services:
             dockerfile: ./Dockerfile
         environment:
             - ConnectionStrings__MongoDb=mongodb://admin:admin@mongodb/cryptomonitor
-            - SchedulerOptions__Jobs__0__Cron=0 0 0 1/1 * ? *
+            - SchedulerOptions__Jobs__0__Cron=0 0/1 * 1/1 * ? *
         restart: always
         ports:
             - 18080:80
