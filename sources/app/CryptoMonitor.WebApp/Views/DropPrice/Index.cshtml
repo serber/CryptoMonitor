@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Drop price";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="btn-group btn-group-sm" role="group" aria-label="SymbolSource">
+            <input type="radio" class="btn-check" name="btnradio_symbolSource" value="1" id="btnradio_huobi" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="btnradio_huobi">Huobi</label>
+
+            <input type="radio" class="btn-check" name="btnradio_symbolSource" value="2" id="btnradio_binance" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio_binance">Binance</label>
+        </div>
+
+        <div class="btn-group btn-group-sm" role="group" aria-label="Symbol">
+            <input type="radio" class="btn-check" name="btnradio_symbol" value="BTC" id="btnradio_btc" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="btnradio_btc">BTC</label>
+
+            <input type="radio" class="btn-check" name="btnradio_symbol" value="USDT" id="btnradio_usdt" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio_usdt">USDT</label>
+        </div>
+
+        <hr />
+
+        <div class="table-responsive">
+            <table class="table table-sm" id="drop-price-table">
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/datatables.custom.css" />
+    <link rel="stylesheet" href="~/lib/datatables.net-bs5/dataTables.bootstrap5.min.css" />
+}
+
+@section Scripts
+{
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs5/dataTables.bootstrap5.min.js"></script>
+
+    <script src="~/js/drop_price.js"></script>
+}

@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Routing
+@inject IHttpContextAccessor _httpContextAccessor
+@model PaginationModel
+@{
+    var routeData = _httpContextAccessor.HttpContext!.GetRouteData();
+    var controller = routeData.Values["controller"]?.ToString();
+    var action = string.IsNullOrEmpty(Model.Action) ? routeData.Values["action"]?.ToString() : Model.Action;
+
+    var currentPage = 1;
+
+    var routeValues = new Dictionary<string, string>();
+    foreach (var (key, value) in _httpContextAccessor.HttpContext.Request.Query)
+    {
+        if (key == "page")
+        {
+            int.TryParse(value, out currentPage);
+
+            continue;
+        }
+        
+        routeValues.Add(key, value);
+    }
+}
+
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (var page = 1; page < Model.TotalPages + 1; page++)
+            {
+                if (page == currentPage)
+                {
+                    <li class="page-item active">
+                        <span class="page-link">
+                            @(page)
+                        </span>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="@action" asp-controller="@controller" asp-all-route-data="@(new Dictionary<string, string>(routeValues) {{"page", page.ToString()}})">@(page)</a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+}

@@ -1,0 +1,12 @@
+﻿.dataTables_paginate {
+    display: inline;
+    float: right;
+}
+
+.dataTables_length {
+    display: inline;
+}
+
+.dataTables_filter {
+    display: inline;
+}

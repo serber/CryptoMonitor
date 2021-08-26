@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Market";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="btn-group btn-group-sm" role="group" aria-label="SymbolSource">
+            <input type="radio" class="btn-check" name="btnradio_symbolSource" value="1" id="btnradio_huobi" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="btnradio_huobi">Huobi</label>
+
+            <input type="radio" class="btn-check" name="btnradio_symbolSource" value="2" id="btnradio_binance" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio_binance">Binance</label>
+        </div>
+
+        <div class="btn-group btn-group-sm" role="group" aria-label="Symbol">
+            <input type="radio" class="btn-check" name="btnradio_symbol" value="BTC" id="btnradio_btc" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="btnradio_btc">BTC</label>
+
+            <input type="radio" class="btn-check" name="btnradio_symbol" value="USDT" id="btnradio_usdt" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio_usdt">USDT</label>
+        </div>
+
+        <div class="btn-group">
+            <input type="text" class="form-control form-control-sm" id="search" placeholder="Search" aria-label="Search">
+        </div>
+        <hr />
+
+        <div class="table-responsive">
+            <table class="table table-sm" id="market-table">
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add-drop-price-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create drop price</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-drop-price-modal-form">
+                    <div class="mb-3">
+                        <label class="form-label" for="sellSymbol">Sell symbol</label>
+                        <input type="text" readonly class="form-control form-control-sm" id="sellSymbol" name="sellSymbol">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="buySymbol">Buy symbol</label>
+                        <input type="text" readonly class="form-control form-control-sm" id="buySymbol" name="buySymbol">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="symbolSourceDisplay">Source</label>
+                        <input type="text" readonly class="form-control form-control-sm" id="symbolSourceDisplay">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="currentPrice">Current price</label>
+                        <input type="text" readonly class="form-control form-control-sm" id="currentPrice" name="currentPrice">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="dropPrice">Drop price</label>
+                        <input type="number" class="form-control form-control-sm" id="dropPrice" name="dropPrice">
+                    </div>
+                    
+                    <input type="hidden" readonly class="form-control form-control-sm" id="symbolSource" name="symbolSource">
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/datatables.custom.css" />
+    <link rel="stylesheet" href="~/lib/datatables.net-bs5/dataTables.bootstrap5.min.css" />
+}
+
+@section Scripts
+{
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs5/dataTables.bootstrap5.min.js"></script>
+
+    <script src="~/js/market.js"></script>
+}
