@@ -5,8 +5,9 @@ namespace CryptoMonitor.DataAccess.Common.Repositories
 {
     public interface IUserRepository
     {
-        public Task<bool> Exist(string login, string passwordHash);
+        public Task<bool> ExistAsync(string login);
 
         public Task<User> GetAsync(string login, string passwordHash);
+        Task AddAsync(string login, string passwordHash);
     }
 }

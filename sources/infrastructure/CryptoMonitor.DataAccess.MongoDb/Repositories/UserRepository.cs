@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CryptoMonitor.Data;
 using CryptoMonitor.DataAccess.Common.Repositories;
 using MongoDB.Driver;
@@ -14,22 +15,33 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
             _mongoCollection = mongoCollection;
         }
 
-        public async Task<bool> Exist(string login, string passwordHash)
+        public async Task<bool> ExistAsync(string login)
         {
-            var filter = Builders<User>.Filter.Where(x => x.Login == login && x.PasswordHash == passwordHash);
+            var filter = Builders<User>.Filter.Eq(x => x.Login, login);
 
-            var cursor = _mongoCollection.Find(filter);
+            var cursor = await _mongoCollection.FindAsync(filter);
 
             return await cursor.AnyAsync();
         }
 
         public async Task<User> GetAsync(string login, string passwordHash)
         {
-            var filter = Builders<User>.Filter.Where(x => x.Login == login && x.PasswordHash == passwordHash);
+            var filter = Builders<User>.Filter.And(Builders<User>.Filter.Eq(x => x.Login, login),
+                Builders<User>.Filter.Eq(x => x.PasswordHash, passwordHash));
 
-            var cursor = _mongoCollection.Find(filter);
+            var cursor = await _mongoCollection.FindAsync(filter);
 
             return await cursor.SingleOrDefaultAsync();
+        }
+
+        public async Task AddAsync(string login, string passwordHash)
+        {
+            await _mongoCollection.InsertOneAsync(new User
+            {
+                Login = login,
+                PasswordHash = passwordHash,
+                UserId = Guid.NewGuid().ToString("D")
+            });
         }
     }
 }

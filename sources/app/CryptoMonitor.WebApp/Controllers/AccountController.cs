@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using CryptoMonitor.WebApp.Models.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CryptoMonitor.WebApp.Controllers
 {
@@ -47,6 +48,20 @@ namespace CryptoMonitor.WebApp.Controllers
             ModelState.TryAddModelError("", "Invalid login or password");
 
             return View();
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> Create(CreateAccountModel model)
+        {
+            if (await _userRepository.ExistAsync(model.Login))
+            {
+                return BadRequest();
+            }
+
+            await _userRepository.AddAsync(model.Login, HashHelper.Hash(model.Password));
+
+            return Ok();
         }
     }
 }
