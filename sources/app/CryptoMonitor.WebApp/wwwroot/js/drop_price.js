@@ -39,16 +39,7 @@
                 targets: [3]
             }
         ],
-
-        rowCallback: function (row, data, index) {
-            if (data.change > 0) {
-                $(row).addClass("plus");
-            }
-            else if (data.change < 0) {
-                $(row).addClass("minus");
-            }
-        },
-
+        
         ajax: {
             url: "dropprice/data",
             type: "GET",
