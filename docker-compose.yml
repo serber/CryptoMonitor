@@ -9,7 +9,7 @@ services:
         image: mongo:latest
         volumes:
             - ./db/mongo/init_database.js:/docker-entrypoint-initdb.d/init_database.js
-            - /var/logs/cryptomonitor:/var/logs/cryptomonitor
+            - /var/log/cryptomonitor:/var/log/cryptomonitor
             - mongodb_volume:/data/db
         environment:
             - MONGO_INITDB_ROOT_USERNAME=admin
