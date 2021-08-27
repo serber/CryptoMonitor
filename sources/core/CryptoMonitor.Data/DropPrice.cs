@@ -29,9 +29,6 @@ namespace CryptoMonitor.Data
         /// </summary>
         public string UserId { get; set; }
 
-        /// <summary>
-        /// Множитель, отношение цены выпадения к текущей цене пары
-        /// </summary>
-        public decimal Multiplier { get; set; }
+        public decimal SymbolPrice { get; set; }
     }
 }

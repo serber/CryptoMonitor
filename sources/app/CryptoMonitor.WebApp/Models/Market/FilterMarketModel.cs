@@ -22,8 +22,8 @@ namespace CryptoMonitor.WebApp.Models.Market
             return new ListSymbolPricesQuery
             {
                 BuySymbol = BuySymbol,
+                SellSymbol = Query,
                 SymbolSource = SymbolSource,
-                Query = Query,
                 Skip = Skip,
                 Take = Take,
                 OrderBy = !string.IsNullOrEmpty(OrderBy) ? OrderBy.TrimStart('^') : default,

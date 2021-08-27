@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using CryptoMonitor.Data.Enums;
 using CryptoMonitor.Services.Commands;
+using CryptoMonitor.Services.Notifications;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Quartz;
 
 namespace CryptoMonitor.Quartz.Jobs
@@ -10,36 +12,41 @@ namespace CryptoMonitor.Quartz.Jobs
     {
         private readonly IMediator _mediator;
 
-        public LoadPricesJob(IMediator mediator)
+        private readonly ILogger<LoadPricesJob> _logger;
+
+        public LoadPricesJob(IMediator mediator, ILogger<LoadPricesJob> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            await _mediator.Send(new LoadPricesCommand
-            {
-                SymbolSource = SymbolSource.Binance,
-                BuySymbol = "USDT"
-            });
+            await ExecuteInternalAsync(SymbolSource.Binance, "USDT");
 
-            await _mediator.Send(new LoadPricesCommand
-            {
-                SymbolSource = SymbolSource.Binance,
-                BuySymbol = "BTC"
-            });
+            await ExecuteInternalAsync(SymbolSource.Binance, "BTC");
 
-            await _mediator.Send(new LoadPricesCommand
-            {
-                SymbolSource = SymbolSource.Huobi,
-                BuySymbol = "USDT"
-            });
+            await ExecuteInternalAsync(SymbolSource.Huobi, "USDT");
 
-            await _mediator.Send(new LoadPricesCommand
+            await ExecuteInternalAsync(SymbolSource.Huobi, "BTC");
+        }
+
+        private async Task ExecuteInternalAsync(SymbolSource symbolSource, string buySymbol)
+        {
+            using (_logger.BeginScope($"SymbolSource = {symbolSource}, BuySymbol = {buySymbol}"))
             {
-                SymbolSource = SymbolSource.Huobi,
-                BuySymbol = "BTC"
-            });
+                await _mediator.Send(new LoadPricesCommand
+                {
+                    SymbolSource = symbolSource,
+                    BuySymbol = buySymbol
+                });
+
+                await _mediator.Publish(new LoadPricesNotification
+                {
+                    SymbolSource = symbolSource,
+                    BuySymbol = buySymbol
+                });
+            }
         }
     }
 }

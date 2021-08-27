@@ -12,5 +12,7 @@ namespace CryptoMonitor.DataAccess.Common.Repositories
         Task DeleteAsync(string userId, string sellSymbol, string buySymbol, SymbolSource symbolSource);
         
         Task<(IReadOnlyCollection<DropPrice> Items, long Count)> ListAsync(string userId, string buySymbol, SymbolSource symbolSource, string orderBy, bool asc);
+
+        Task UpdateSymbolPriceAsync(string sellSymbol, string buySymbol, SymbolSource symbolSource, decimal symbolPrice);
     }
 }

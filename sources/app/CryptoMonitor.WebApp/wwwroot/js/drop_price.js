@@ -15,7 +15,8 @@
         columns: [
             { title: "Symbol", data: "SellSymbol", name: "SellSymbol", orderable: true, width: "20%" },
             { title: "Drop price", data: "Price", name: "Price", orderable: true, width: "30%" },
-            { title: "Multiplier", data: "Multiplier", name: "Multiplier", orderable: false, width: "25%" }
+            { title: "Symbol price", data: "SymbolPrice", name: "SymbolPrice", orderable: true, width: "30%" },
+            { title: "Multiplier", data: null, orderable: false, width: "25%" }
         ],
 
         order: [[0, "asc"]],
@@ -33,17 +34,7 @@
             },
             {
                 render: function (data, type, row) {
-                    if (data) {
-                        var parsed = parseFloat(data).toFixed(3);
-
-                        if (parsed > 0) {
-                            return `+${parsed}%`;
-                        }
-
-                        return parsed + "%";
-                    }
-
-                    return "";
+                    return (parseFloat(row.Price) / parseFloat(row.SymbolPrice)).toFixed(4);
                 },
                 targets: [3]
             }

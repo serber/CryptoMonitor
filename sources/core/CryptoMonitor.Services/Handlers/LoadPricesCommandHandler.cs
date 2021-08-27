@@ -5,7 +5,6 @@ using CryptoMonitor.Services.Sources;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,7 +48,7 @@ namespace CryptoMonitor.Services.Handlers
 
             await _symbolPriceRepository.AddAsync(symbolPrices);
 
-            _logger.LogInformation($"Saved symbol prices for {request.SymbolSource}");
+            _logger.LogInformation("Symbol prices saved");
 
             return Unit.Value;
         }

@@ -8,10 +8,10 @@ namespace CryptoMonitor.Services.Queries
     public class ListSymbolPricesQuery : IRequest<(IReadOnlyCollection<SymbolPrice> Items, long TotalCount)>
     {
         public string BuySymbol { get; set; }
+        
+        public string SellSymbol { get; set; }
 
         public SymbolSource? SymbolSource { get; set; }
-
-        public string Query { get; set; }
 
         public string OrderBy { get; set; }
 

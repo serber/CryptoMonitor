@@ -53,13 +53,13 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
             return await cursor.SingleOrDefaultAsync();
         }
 
-        public async Task<(IReadOnlyCollection<SymbolPrice> Items, long TotalCount)> ListAsync(int skip = 0, int take = 50, string sellSymbol = null, string buySymbol = null, SymbolSource? symbolSource = null, string query = null, string orderBy = null, bool asc = true)
+        public async Task<(IReadOnlyCollection<SymbolPrice> Items, long TotalCount)> ListAsync(int skip = 0, int take = 50, string sellSymbol = null, string buySymbol = null, SymbolSource? symbolSource = null, string orderBy = null, bool asc = true)
         {
             var filterDefinitions = new List<FilterDefinition<SymbolPrice>>();
 
             if (!string.IsNullOrEmpty(sellSymbol))
             {
-                filterDefinitions.Add(Builders<SymbolPrice>.Filter.Eq(s => s.SellSymbol, sellSymbol));
+                filterDefinitions.Add(Builders<SymbolPrice>.Filter.Regex(x => x.SellSymbol, new BsonRegularExpression(sellSymbol, "i")));
             }
 
             if (!string.IsNullOrEmpty(buySymbol))
@@ -71,12 +71,7 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
             {
                 filterDefinitions.Add(Builders<SymbolPrice>.Filter.Eq(s => s.Source, symbolSource.Value));
             }
-
-            if (!string.IsNullOrEmpty(query))
-            {
-                filterDefinitions.Add(Builders<SymbolPrice>.Filter.Regex(x => x.SellSymbol, new BsonRegularExpression(query, "i")));
-            }
-
+            
             var sort = orderBy?.ToLower() switch
             {
                 "price" => asc ? Builders<SymbolPrice>.Sort.Ascending(x => x.Price) : Builders<SymbolPrice>.Sort.Descending(x => x.Price),
@@ -98,14 +93,17 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
             };
 
             using var cursor = await _mongoCollection.FindAsync(filter, findOptions);
-            var result = new List<SymbolPrice>();
+            return (await cursor.ToListAsync(), count);
+        }
 
-            while (await cursor.MoveNextAsync())
-            {
-                result.AddRange(cursor.Current);
-            }
+        public async Task<IReadOnlyCollection<SymbolPrice>> ListAsync(string buySymbol, SymbolSource symbolSource)
+        {
+            var filter =
+                Builders<SymbolPrice>.Filter.And(Builders<SymbolPrice>.Filter.Eq(s => s.BuySymbol, buySymbol),
+                    Builders<SymbolPrice>.Filter.Eq(s => s.Source, symbolSource));
 
-            return (result, count);
+            using var cursor = await _mongoCollection.FindAsync(filter);
+            return await cursor.ToListAsync();
         }
     }
 }

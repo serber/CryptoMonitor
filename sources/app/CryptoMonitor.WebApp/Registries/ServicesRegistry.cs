@@ -5,6 +5,7 @@ using CryptoMonitor.DataAccess.MongoDb;
 using CryptoMonitor.DataAccess.MongoDb.Repositories;
 using CryptoMonitor.Quartz;
 using CryptoMonitor.Quartz.Jobs;
+using CryptoMonitor.Services.Behaviors;
 using CryptoMonitor.Services.Commands;
 using CryptoMonitor.Services.Sources;
 using MediatR;
@@ -32,6 +33,7 @@ namespace CryptoMonitor.WebApp.Registries
                 .AddScoped<LoadPricesJob>()
 
                 .AddMediatR(typeof(LoadPricesCommand))
+                .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
 
                 .AddTransient<ISymbolPriceRepository, SymbolPriceRepository>()
                 .AddTransient<IUserRepository, UserRepository>()

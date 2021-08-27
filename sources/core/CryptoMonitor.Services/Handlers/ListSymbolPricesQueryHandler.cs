@@ -19,7 +19,7 @@ namespace CryptoMonitor.Services.Handlers
 
         public async Task<(IReadOnlyCollection<SymbolPrice> Items, long TotalCount)> Handle(ListSymbolPricesQuery request, CancellationToken cancellationToken)
         {
-            return await _symbolPriceRepository.ListAsync(request.Skip, request.Take, default, request.BuySymbol, request.SymbolSource, request.Query, request.OrderBy, request.Asc);
+            return await _symbolPriceRepository.ListAsync(request.Skip, request.Take, request.SellSymbol, request.BuySymbol, request.SymbolSource, request.OrderBy, request.Asc);
         }
     }
 }

@@ -9,6 +9,7 @@ services:
         image: mongo:latest
         volumes:
             - ./db/mongo/init_database.js:/docker-entrypoint-initdb.d/init_database.js
+            - /var/logs/cryptomonitor:/var/logs/cryptomonitor
             - mongodb_volume:/data/db
         environment:
             - MONGO_INITDB_ROOT_USERNAME=admin
@@ -22,7 +23,7 @@ services:
             context: .
             dockerfile: ./Dockerfile
         environment:
-            - ConnectionStrings__MongoDb=mongodb://admin:admin@mongodb/admin/?readPreference=primary&ssl=false
+            - ConnectionStrings__MongoDb=mongodb://admin:admin@mongodb?readPreference=primary&ssl=false
             - SchedulerOptions__Jobs__0__Cron=0 0/1 * 1/1 * ? *
         restart: always
         ports:

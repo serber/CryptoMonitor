@@ -26,7 +26,7 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
 
             var update = Builders<DropPrice>.Update
                     .Set(x => x.Price, dropPrice.Price)
-                    .Set(x => x.Multiplier, dropPrice.Multiplier);
+                    .Set(x => x.SymbolPrice, dropPrice.SymbolPrice);
 
             await _mongoCollection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
         }
@@ -56,20 +56,26 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
                 Sort = orderBy?.ToLower() switch
                 {
                     "price" => asc ? Builders<DropPrice>.Sort.Ascending(x => x.Price) : Builders<DropPrice>.Sort.Descending(x => x.Price),
-                    "multiplier" => asc ? Builders<DropPrice>.Sort.Ascending(x => x.Multiplier) : Builders<DropPrice>.Sort.Descending(x => x.Multiplier),
+                    "symbolprice" => asc ? Builders<DropPrice>.Sort.Ascending(x => x.SymbolPrice) : Builders<DropPrice>.Sort.Descending(x => x.SymbolPrice),
                     _ => asc ? Builders<DropPrice>.Sort.Ascending(x => x.SellSymbol) : Builders<DropPrice>.Sort.Descending(x => x.SellSymbol)
                 }
             };
 
             using var cursor = await _mongoCollection.FindAsync(filter, findOptions);
-            var result = new List<DropPrice>();
+            return (await cursor.ToListAsync(), count);
+        }
 
-            while (await cursor.MoveNextAsync())
-            {
-                result.AddRange(cursor.Current);
-            }
+        public async Task UpdateSymbolPriceAsync(string sellSymbol, string buySymbol, SymbolSource symbolSource, decimal symbolPrice)
+        {
+            var filter = Builders<DropPrice>.Filter.And(
+                Builders<DropPrice>.Filter.Eq(x => x.SellSymbol, sellSymbol),
+                Builders<DropPrice>.Filter.Eq(x => x.BuySymbol, buySymbol),
+                Builders<DropPrice>.Filter.Eq(x => x.Source, symbolSource));
 
-            return (result, count);
+            var update = Builders<DropPrice>.Update
+                .Set(x => x.SymbolPrice, symbolPrice);
+
+            await _mongoCollection.UpdateManyAsync(filter, update, new UpdateOptions { IsUpsert = false });
         }
     }
 }

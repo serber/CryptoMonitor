@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using CryptoMonitor.Data;
 using CryptoMonitor.DataAccess.Common.Repositories;
 using CryptoMonitor.Services.Commands;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace CryptoMonitor.Services.Handlers
 {
@@ -14,15 +14,19 @@ namespace CryptoMonitor.Services.Handlers
 
         private readonly ISymbolPriceRepository _symbolPriceRepository;
 
-        public AddDropPriceCommandHandler(IDropPriceRepository dropPriceRepository, ISymbolPriceRepository symbolPriceRepository)
+        private readonly ILogger<AddDropPriceCommandHandler> _logger;
+
+        public AddDropPriceCommandHandler(IDropPriceRepository dropPriceRepository, ISymbolPriceRepository symbolPriceRepository, ILogger<AddDropPriceCommandHandler> logger)
         {
             _dropPriceRepository = dropPriceRepository;
             _symbolPriceRepository = symbolPriceRepository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(AddDropPriceCommand request, CancellationToken cancellationToken)
         {
-            var symbolPrice = await _symbolPriceRepository.GetAsync(request.SellSymbol, request.BuySymbol, request.SymbolSource);
+            var symbolPrice =
+                await _symbolPriceRepository.GetAsync(request.SellSymbol, request.BuySymbol, request.SymbolSource);
 
             var dropPrice = new DropPrice
             {
@@ -35,10 +39,12 @@ namespace CryptoMonitor.Services.Handlers
 
             if (symbolPrice != null)
             {
-                dropPrice.Multiplier = Math.Round(request.Price / symbolPrice.Price, 4);
+                dropPrice.SymbolPrice = symbolPrice.Price;
             }
-
+            
             await _dropPriceRepository.AddAsync(dropPrice);
+
+            _logger.LogInformation("Created drop price");
 
             return Unit.Value;
         }
