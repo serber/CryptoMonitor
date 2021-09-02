@@ -26,7 +26,8 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
 
             var update = Builders<DropPrice>.Update
                     .Set(x => x.Price, dropPrice.Price)
-                    .Set(x => x.SymbolPrice, dropPrice.SymbolPrice);
+                    .Set(x => x.SymbolPrice, dropPrice.SymbolPrice)
+                    .Set(x => x.Multiplier, dropPrice.Multiplier);
 
             await _mongoCollection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
         }
