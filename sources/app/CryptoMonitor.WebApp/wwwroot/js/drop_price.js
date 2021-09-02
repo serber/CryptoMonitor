@@ -13,15 +13,29 @@
             thousands: "."
         },
         columns: [
-            { title: "Symbol", data: "SellSymbol", name: "SellSymbol", orderable: true, width: "20%" },
+            { title: "", data: null, orderable: false, width: "5%" },
+            { title: "Symbol", data: "SellSymbol", name: "SellSymbol", orderable: true, width: "15%" },
             { title: "Drop price", data: "Price", name: "Price", orderable: true, width: "30%" },
             { title: "Symbol price", data: "SymbolPrice", name: "SymbolPrice", orderable: true, width: "30%" },
-            { title: "Multiplier", data: null, orderable: false, width: "25%" }
+            { title: "Multiplier", data: "Multiplier", name: "Multiplier", orderable: true, width: "20%" }
         ],
 
-        order: [[0, "asc"]],
+        order: [[4, "desc"]],
 
         columnDefs: [
+            {
+                render: function (data, type, row) {
+                    var formatButton =
+                        (sellSymbol, buySymbol, symbolSource) =>
+                            `<button type='button' class='btn btn-outline-danger btn-sm btn-delete-drop-price' data-sell-symbol='${sellSymbol
+                            }' data-buy-symbol='${buySymbol}' data-symbol-source='${symbolSource}'>-</button>`;
+
+                    var button = formatButton(row.SellSymbol, row.BuySymbol, row.Source, row.Price);
+
+                    return button;
+                },
+                targets: [0]
+            },
             {
                 render: function (data, type, row) {
                     if (data) {
@@ -30,13 +44,7 @@
 
                     return "";
                 },
-                targets: [1, 2]
-            },
-            {
-                render: function (data, type, row) {
-                    return (parseFloat(row.Price) / parseFloat(row.SymbolPrice)).toFixed(4);
-                },
-                targets: [3]
+                targets: [2, 3, 4]
             }
         ],
         
@@ -81,5 +89,30 @@
 
     $("#search").on("change", function () {
         table.ajax.reload();
+    });
+
+    $("#drop-price-table").on("click", ".btn-delete-drop-price", function (event) {
+        var target = event.target;
+
+        var sellSymbol = target.getAttribute("data-sell-symbol");
+        var buySymbol = target.getAttribute("data-buy-symbol");
+        var symbolSource = target.getAttribute("data-symbol-source");
+
+        var data = {
+            SellSymbol: sellSymbol,
+            BuySymbol: buySymbol,
+            SymbolSource: symbolSource
+        };
+
+        $.ajax
+        ({
+            url: "/dropprice",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            type: "delete",
+            success: function (result) {
+                table.ajax.reload();
+            }
+        });
     });
 });

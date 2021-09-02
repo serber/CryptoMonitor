@@ -38,6 +38,8 @@ namespace CryptoMonitor.DataAccess.MongoDb
                     .SetSerializer(new DecimalSerializer(BsonType.Decimal128));
                 map.MapProperty(x => x.SymbolPrice).SetElementName("symbol_price")
                     .SetSerializer(new DecimalSerializer(BsonType.Decimal128));
+                map.MapProperty(x => x.Multiplier).SetElementName("multiplier")
+                    .SetSerializer(new DecimalSerializer(BsonType.Decimal128));
             });
         }
     }

@@ -29,7 +29,11 @@ namespace CryptoMonitor.Services.NotificationHandlers
 
             foreach (var symbolPrice in symbolPrices)
             {
-                await _dropPriceRepository.UpdateSymbolPriceAsync(symbolPrice.SellSymbol, symbolPrice.BuySymbol, symbolPrice.Source, symbolPrice.Price);
+                var dropPrice = await _dropPriceRepository.GetAsync(symbolPrice.SellSymbol, symbolPrice.BuySymbol, symbolPrice.Source);
+                if (dropPrice != null)
+                {
+                    await _dropPriceRepository.UpdateSymbolPriceAsync(dropPrice.SellSymbol, dropPrice.BuySymbol, dropPrice.Source, symbolPrice.Price, dropPrice.Price / symbolPrice.Price);
+                }
             }
 
             _logger.LogInformation("Drop prices updated");

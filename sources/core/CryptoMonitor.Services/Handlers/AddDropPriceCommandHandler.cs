@@ -40,6 +40,7 @@ namespace CryptoMonitor.Services.Handlers
             if (symbolPrice != null)
             {
                 dropPrice.SymbolPrice = symbolPrice.Price;
+                dropPrice.Multiplier = request.Price / symbolPrice.Price;
             }
             
             await _dropPriceRepository.AddAsync(dropPrice);

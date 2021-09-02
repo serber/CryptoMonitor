@@ -30,5 +30,7 @@ namespace CryptoMonitor.Data
         public string UserId { get; set; }
 
         public decimal SymbolPrice { get; set; }
+        
+        public decimal Multiplier { get; set; }
     }
 }

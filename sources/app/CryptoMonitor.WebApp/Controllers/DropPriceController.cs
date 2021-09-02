@@ -55,7 +55,13 @@ namespace CryptoMonitor.WebApp.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(DeleteDropPriceModel model)
         {
-            await _mediator.Send(new DeleteDropPriceCommand());
+            await _mediator.Send(new DeleteDropPriceCommand
+            {
+                UserId = UserId,
+                SellSymbol = model.SellSymbol,
+                BuySymbol = model.BuySymbol,
+                SymbolSource = model.SymbolSource
+            });
 
             return Ok();
         }

@@ -29,7 +29,7 @@
                         (buttonStyle, buttonAction, buttonContent, sellSymbol, buySymbol, symbolSource, currentPrice) =>
                             `<button type='button' data-bs-toggle="modal" data-bs-target="#add-drop-price-modal" class='btn ${buttonStyle} btn-sm btn-${buttonAction}-drop-price' data-sell-symbol='${sellSymbol
                             }' data-buy-symbol='${buySymbol}' data-symbol-source='${symbolSource}' data-current-price='${currentPrice}'>${buttonContent
-                            }</button`;
+                            }</button>`;
 
                     var button = formatButton("btn-outline-success", "add", "+", row.SellSymbol, row.BuySymbol, row.Source, row.Price);
 

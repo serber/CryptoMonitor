@@ -13,10 +13,10 @@
         </div>
 
         <div class="btn-group btn-group-sm" role="group" aria-label="Symbol">
-            <input type="radio" class="btn-check" name="btnradio_symbol" value="BTC" id="btnradio_btc" autocomplete="off" checked>
+            <input type="radio" class="btn-check" name="btnradio_symbol" value="BTC" id="btnradio_btc" autocomplete="off">
             <label class="btn btn-outline-primary" for="btnradio_btc">BTC</label>
 
-            <input type="radio" class="btn-check" name="btnradio_symbol" value="USDT" id="btnradio_usdt" autocomplete="off">
+            <input type="radio" class="btn-check" name="btnradio_symbol" value="USDT" id="btnradio_usdt" autocomplete="off" checked>
             <label class="btn btn-outline-primary" for="btnradio_usdt">USDT</label>
         </div>
 
@@ -59,7 +59,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="dropPrice">Drop price</label>
-                        <input type="number" class="form-control form-control-sm" id="dropPrice" name="dropPrice">
+                        <input type="number" step=".0000000001" class="form-control form-control-sm" id="dropPrice" name="dropPrice">
                     </div>
                     
                     <input type="hidden" readonly class="form-control form-control-sm" id="symbolSource" name="symbolSource">

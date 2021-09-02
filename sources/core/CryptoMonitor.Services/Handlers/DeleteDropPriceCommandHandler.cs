@@ -15,9 +15,12 @@ namespace CryptoMonitor.Services.Handlers
             _dropPriceRepository = dropPriceRepository;
         }
 
-        public Task<Unit> Handle(DeleteDropPriceCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteDropPriceCommand request, CancellationToken cancellationToken)
         {
-            return Unit.Task;
+            await _dropPriceRepository.DeleteAsync(request.UserId, request.SellSymbol, request.BuySymbol,
+                request.SymbolSource);
+
+            return Unit.Value;
         }
     }
 }

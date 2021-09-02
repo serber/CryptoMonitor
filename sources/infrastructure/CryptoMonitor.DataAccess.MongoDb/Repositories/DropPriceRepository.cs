@@ -57,6 +57,7 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
                 {
                     "price" => asc ? Builders<DropPrice>.Sort.Ascending(x => x.Price) : Builders<DropPrice>.Sort.Descending(x => x.Price),
                     "symbolprice" => asc ? Builders<DropPrice>.Sort.Ascending(x => x.SymbolPrice) : Builders<DropPrice>.Sort.Descending(x => x.SymbolPrice),
+                    "multiplier" => asc ? Builders<DropPrice>.Sort.Ascending(x => x.Multiplier) : Builders<DropPrice>.Sort.Descending(x => x.Multiplier),
                     _ => asc ? Builders<DropPrice>.Sort.Ascending(x => x.SellSymbol) : Builders<DropPrice>.Sort.Descending(x => x.SellSymbol)
                 }
             };
@@ -65,7 +66,7 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
             return (await cursor.ToListAsync(), count);
         }
 
-        public async Task UpdateSymbolPriceAsync(string sellSymbol, string buySymbol, SymbolSource symbolSource, decimal symbolPrice)
+        public async Task UpdateSymbolPriceAsync(string sellSymbol, string buySymbol, SymbolSource symbolSource, decimal symbolPrice, decimal multiplier)
         {
             var filter = Builders<DropPrice>.Filter.And(
                 Builders<DropPrice>.Filter.Eq(x => x.SellSymbol, sellSymbol),
@@ -73,9 +74,21 @@ namespace CryptoMonitor.DataAccess.MongoDb.Repositories
                 Builders<DropPrice>.Filter.Eq(x => x.Source, symbolSource));
 
             var update = Builders<DropPrice>.Update
-                .Set(x => x.SymbolPrice, symbolPrice);
+                .Set(x => x.SymbolPrice, symbolPrice)
+                .Set(x => x.Multiplier, multiplier);
 
             await _mongoCollection.UpdateManyAsync(filter, update, new UpdateOptions { IsUpsert = false });
+        }
+
+        public async Task<DropPrice> GetAsync(string sellSymbol, string buySymbol, SymbolSource symbolSource)
+        {
+            var filter = Builders<DropPrice>.Filter.And(
+                Builders<DropPrice>.Filter.Eq(x => x.SellSymbol, sellSymbol),
+                Builders<DropPrice>.Filter.Eq(x => x.BuySymbol, buySymbol),
+                Builders<DropPrice>.Filter.Eq(x => x.Source, symbolSource));
+
+            using var cursor = await _mongoCollection.FindAsync(filter);
+            return await cursor.FirstOrDefaultAsync();
         }
     }
 }
