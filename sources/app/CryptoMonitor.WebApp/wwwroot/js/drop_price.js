@@ -5,7 +5,7 @@
         bAutoWidth: false,
         searching: false,
         dom: "ptr",
-        lengthMenu: [20, 50, 100],
+        lengthMenu: [200],
         language: {
             sProcessing: "Please wait, it will take a few seconds",
             emptyTable: "There are no items to display",
