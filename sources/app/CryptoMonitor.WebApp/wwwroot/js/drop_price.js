@@ -39,7 +39,7 @@
             {
                 render: function (data, type, row) {
                     if (data) {
-                        return parseFloat(data).toFixed(10);
+                        return parseFloat(data).toFixed(8);
                     }
 
                     return "";
